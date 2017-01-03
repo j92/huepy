@@ -36,13 +36,16 @@ class MainController(BoxLayout):
             self.lights_layout.add_widget(tgl_btn)
 
     def toggle_on_off(self, button, state):
+        light_id = int(button.id)
+
+        button.text = 'On'
+        on = False
 
         if state is 'down':
             button.text = 'Off'
-            self.lights[int(button.id)]._set('on', True);
-        elif state is 'normal':
-            button.text = 'On'
-            self.lights[int(button.id)]._set('on', False);
+            on = True
+
+        self.lights[light_id]._set('on', on);
 
 
 class HuePy(App):
