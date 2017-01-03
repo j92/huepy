@@ -40,7 +40,7 @@ class MainController(BoxLayout):
         if state == 'down':
             button.text = 'Off'
             self.lights[int(button.id)]._set('on', True);
-        else:
+        elif state == 'normal':
             button.text = 'On'
             self.lights[int(button.id)]._set('on', False);
 
