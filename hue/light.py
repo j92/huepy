@@ -11,7 +11,7 @@ class Light(object):
         self.reachable = False
         self.bri = 0
 
-    def _set(self, key, value):
+    def set(self, key, value):
         if key == 'name':
             self.name = value
         elif key == 'on':
@@ -24,3 +24,14 @@ class Light(object):
             return
 
         return self.bridge.set_light(self)
+
+    @staticmethod
+    def from_array(bridge, id, data):
+        light = Light(bridge, int(id))
+
+        light.on = data['state']['on']
+        light.name = data['name']
+        light.reachable = data['state']['reachable']
+        light.bri = data['state']['bri']
+
+        return light

@@ -47,8 +47,7 @@ class MainController(BoxLayout):
             button.text = 'Off'
             on = True
 
-        self.lights[light_id]._set('on', on);
-
+        self.lights[light_id].set('on', on)
 
 class HuePy(App):
 

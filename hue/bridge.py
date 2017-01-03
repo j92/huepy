@@ -32,13 +32,18 @@ class Bridge(object):
         if r.status_code <> 200:
             raise BridgeApiException('Unable to make the request. ' + r.reason)
 
-        return self.lights_from_json(r.json())
+        lights = r.json()
+
+        for i in lights:
+            self._add_light(Light.from_array(self, i, lights[i]))
+
+        return self.lights
 
     def set_light(self, light):
-        self.lights[light.id] = light
+        self._add_light(light)
 
         requests.put(
-            'http://' + self.internal_ip + '/api/' + self.username + '/lights/' + light.id + '/state',
+            'http://' + self.internal_ip + '/api/' + self.username + '/lights/' + str(light.id) + '/state',
             data=json.dumps({'on': light.on, 'bri': light.bri})
         )
 
@@ -58,17 +63,5 @@ class Bridge(object):
         self.internal_ip = bridges[0]['internalipaddress']
         self.id = bridges[0]['id']
 
-    def lights_from_json(self, lights):
-
-        for i in lights:
-
-            light = Light(self, i)
-            light.on = lights[i]['state']['on']
-            light.name = lights[i]['name']
-            light.reachable = lights[i]['state']['reachable']
-            light.bri = lights[i]['state']['bri']
-
-            self.lights[int(i)] = light
-
-        return self.lights
-
+    def _add_light(self, light):
+        self.lights[light.id] = light
