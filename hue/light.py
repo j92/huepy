@@ -12,14 +12,10 @@ class Light(object):
         self.bri = 0
 
     def set(self, key, value):
-        if key == 'name':
-            self.name = value
-        elif key == 'on':
+        if key == 'on':
             self.on = value
-        elif key == 'reachable':
-            self.reachable = value
         elif key == 'bri':
-            self.id = value
+            self.bri = value
         else:
             return
 
