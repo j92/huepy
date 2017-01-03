@@ -1,0 +1,17 @@
+#:kivy 1.0
+
+<MainController>:
+    lights_layout: lights_layout
+
+    GridLayout:
+        cols: 2
+        padding: 20
+
+        Label:
+            text: 'Welcome to Joost\'s Hue'
+
+        GridLayout:
+            id: lights_layout
+            cols: 2
+            padding: 5
+            background_color: 'red'
