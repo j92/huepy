@@ -37,10 +37,10 @@ class MainController(BoxLayout):
 
     def toggle_on_off(self, button, state):
 
-        if state == 'down':
+        if state is 'down':
             button.text = 'Off'
             self.lights[int(button.id)]._set('on', True);
-        elif state == 'normal':
+        elif state is 'normal':
             button.text = 'On'
             self.lights[int(button.id)]._set('on', False);
 
