@@ -22,7 +22,9 @@ class MainController(BoxLayout):
 
         bridge = Bridge()
         self.lights = bridge.get_lights()
+        self.add_lights_to_layout()
 
+    def add_lights_to_layout(self):
         for i in self.lights:
             self.lights_layout.add_widget(Label(text=self.lights[i].name))
 
