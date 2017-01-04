@@ -1,4 +1,31 @@
-#:kivy 1.0
+#:kivy 1.9.1
+#:import ListAdapter kivy.adapters.listadapter.ListAdapter
+#:import Factory kivy.factory.Factory
+#:import Light hue.light.Light
+
+<LightListItem>:
+
+    height: '48sp'
+    size_hint_y: None
+
+    canvas:
+        Color:
+            rgb: .3, .3, .3
+        Rectangle:
+            pos: self.pos
+            size: self.width, 1
+
+    BoxLayout:
+
+        padding: '5dp'
+
+        Label:
+            text: root.name
+
+        ToggleButton:
+            text: root.text
+            state: root.state
+            on_state: app.toggle_on_off(self, self.state, root.light_index)
 
 <MainController>:
     lights_layout: lights_layout
@@ -7,11 +34,35 @@
         cols: 2
         padding: 20
 
+        canvas:
+            Color:
+                rgb: .3, .3, .3
+
         Label:
             text: 'Welcome to Joost\'s Hue'
 
-        GridLayout:
+        BoxLayout:
             id: lights_layout
-            cols: 2
-            padding: 5
-            background_color: 'red'
+            orientation: 'vertical'
+            padding: '5dp'
+
+            canvas:
+                Color:
+                    rgb: .3, .3, .3
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: '48dp'
+                padding: '5dp'
+
+                Label:
+                    text: 'Hue lights'
+                    font_size: '16sp'
+
+            ListView:
+                adapter: ListAdapter(data=root.lights, cls=Factory.LightListItem, args_converter=root.args_converter)
+

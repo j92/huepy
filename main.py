@@ -4,11 +4,22 @@ import requests
 kivy.require('1.9.1')
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.uix.togglebutton import ToggleButton
 from kivy.app import App
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty, BooleanProperty
 from hue.bridge import Bridge
+
+
+class LightListItem(BoxLayout):
+
+    def __init__(self, **kwargs):
+        super(LightListItem, self).__init__(**kwargs)
+
+    bridge = ObjectProperty()
+    light_index = NumericProperty()
+    name = StringProperty()
+    on = BooleanProperty()
+    text = StringProperty()
+    state = StringProperty()
 
 
 class MainController(BoxLayout):
@@ -16,44 +27,37 @@ class MainController(BoxLayout):
     Add an action to be called from the kv lang file.
     '''
     lights_layout = ObjectProperty(None)
+    lights = ListProperty()
 
     def __init__(self, **kwargs):
         super(MainController, self).__init__(**kwargs)
+        self.lights = Bridge().get_lights()
 
-        bridge = Bridge()
-        self.lights = bridge.get_lights()
-        self.add_lights_to_layout()
+    def args_converter(self, row_index, item):
+        text = 'Off'
+        state = 'normal'
+        if item.on:
+            text = 'On'
+            state = 'down'
 
-    def add_lights_to_layout(self):
-        for i in self.lights:
-            self.lights_layout.add_widget(Label(text=self.lights[i].name))
+        return {'light_index': row_index, 'on': item.on, 'bri': item.bri, 'text': text, 'state': state, 'name': item.name}
 
-            state = 'normal'
-            if self.lights[i].on is True:
-                state = 'down'
-
-            tgl_btn = ToggleButton(text='On', id=str(i), state=state)
-            tgl_btn.bind(state=self.toggle_on_off)
-
-            self.lights_layout.add_widget(tgl_btn)
-
-    def toggle_on_off(self, button, state):
-        light_id = int(button.id)
-
-        button.text = 'On'
-        on = False
-
-        if state is 'down':
-            button.text = 'Off'
-            on = True
-
-        self.lights[light_id].set('on', on)
 
 class HuePy(App):
 
     def build(self):
-        return MainController()
+        self.main_controller = MainController()
+        return self.main_controller
 
+    def toggle_on_off(self, widget, state, light_index):
+        widget.text = 'On'
+        on = False
+
+        if state is 'down':
+            widget.text = 'Off'
+            on = True
+
+        self.main_controller.lights[light_index].set('on', on)
 
 if __name__ == '__main__':
     HuePy().run()

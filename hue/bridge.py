@@ -15,7 +15,7 @@ class Bridge(object):
         self.internal_ip = internal_ip
         self.username = 'ZL7DOFq1lDUiZCS3eNh9qcr5RyNDcBgri-4Rfqox'
 
-        self.lights = {}
+        self.lights = []
 
         if self.internal_ip is None or self.id is None:
             self.discover_bridge()
@@ -64,4 +64,4 @@ class Bridge(object):
         self.id = bridges[0]['id']
 
     def _add_light(self, light):
-        self.lights[light.id] = light
+        self.lights.append(light)
